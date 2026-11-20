@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: afrischool
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3310:3306"
+
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=mysql://root:password@db:3306/afrischool
+      - NODE_ENV=production
+    depends_on:
+      - db
+
+
+volumes:
+  mysql_data:
